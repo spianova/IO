@@ -1,0 +1,66 @@
+abstract class FlowerPlanting {
+    final void plantFlower() {
+        digHole();
+        placeSeeds();
+        fillHole();
+        waterPlants();
+        addFertilizer();
+    }
+    public void digHole() {
+        System.out.println("Digging a hole.");
+    }
+
+    public void fillHole() {
+        System.out.println("Filling the hole.");
+    }
+
+    public void waterPlants() {
+        System.out.println("Watering the plants.");
+    }
+
+    public abstract void placeSeeds();
+    public abstract void addFertilizer();
+}
+
+
+public class RosePlanting extends FlowerPlanting{
+
+    @Override
+    public void placeSeeds() {
+        System.out.println("Placing rose seeds.");
+    }
+
+    @Override
+    public void addFertilizer() {
+        System.out.println("Adding fertilizer for roses.");
+    }
+}
+
+
+public class TulipPlanting extends FlowerPlanting{
+
+    @Override
+    public void placeSeeds() {
+        System.out.println("Placing tulip bulbs.");
+    }
+
+    @Override
+    public void addFertilizer() {
+        System.out.println("Adding fertilizer for tulips.");
+    }
+}
+
+
+public class Main {
+    public static void main(String[] args) {
+        // sadzenie roz
+        FlowerPlanting rosePlanting = new RosePlanting();
+        System.out.println("Planting roses:");
+        rosePlanting.plantFlower();
+
+        // sadzenie tulipanow
+        FlowerPlanting tulipPlanting = new TulipPlanting();
+        System.out.println("Planting tulips:");
+        tulipPlanting.plantFlower();
+    }
+}
