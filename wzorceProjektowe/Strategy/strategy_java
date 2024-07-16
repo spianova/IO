@@ -1,0 +1,57 @@
+public class FlowerCareCostCalculator {
+    private FlowerCareCostStrategy strategy;
+
+    public void setStrategy(FlowerCareCostStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public double calculateCost(int days) {
+        if (strategy == null) {
+            throw new IllegalStateException("Strategy has not been set");
+        }
+        return strategy.calculateCost(days);
+    }
+}
+
+public interface FlowerCareCostStrategy {
+    double calculateCost(int days);
+}
+
+public class OrchidCareCostStrategy implements FlowerCareCostStrategy{
+
+    @Override
+    public double calculateCost(int days) {
+        return days * 2.0;
+    }
+}
+
+public class RoseCareCostStrategy implements FlowerCareCostStrategy{
+
+    @Override
+    public double calculateCost(int days) {
+        return days * 1.5;
+    }
+}
+
+public class TulipCareCostStrategy implements FlowerCareCostStrategy{
+
+    @Override
+    public double calculateCost(int days) {
+        return days * 1.0;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        FlowerCareCostCalculator calculator = new FlowerCareCostCalculator();
+
+        calculator.setStrategy(new RoseCareCostStrategy());
+        System.out.println("Cost of caring for roses for 10 days: " + calculator.calculateCost(10));
+
+        calculator.setStrategy(new TulipCareCostStrategy());
+        System.out.println("Cost of caring for tulips for 10 days: " + calculator.calculateCost(10));
+
+        calculator.setStrategy(new OrchidCareCostStrategy());
+        System.out.println("Cost of caring for orchids for 10 days: " + calculator.calculateCost(10));
+    }
+}
