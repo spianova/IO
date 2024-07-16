@@ -1,0 +1,80 @@
+interface ProcesorPlatnosci {
+    void przetworzPlatnosc(double kwota, String waluta);
+}
+
+class ProcesorPayPal implements ProcesorPlatnosci {
+    @Override
+    public void przetworzPlatnosc(double kwota, String waluta) {
+        System.out.println("Przetwarzanie płatności PayPal: " + kwota + " " + waluta);
+    }
+}
+
+class Stripe {
+    public void makePayment(int amountInCents, String currencyCode) {
+        System.out.println("Przetwarzanie płatności Stripe: " + (amountInCents / 100.0) + " " + currencyCode);
+    }
+}
+
+class AdapterStripe implements ProcesorPlatnosci {
+    private Stripe stripe;
+
+    public AdapterStripe(Stripe stripe) {
+        this.stripe = stripe;
+    }
+
+    @Override
+    public void przetworzPlatnosc(double kwota, String waluta) {
+        int amountInCents = (int) (kwota * 100);
+        stripe.makePayment(amountInCents, waluta);
+    }
+}
+
+class GooglePay {
+    public void pay(int amountInCents, String currencyCode, String country) {
+        System.out.println("Przetwarzanie płatności Google Pay: " + (amountInCents / 100.0) + " " + currencyCode + " w kraju " + country);
+    }
+}
+
+class AdapterGooglePay implements ProcesorPlatnosci {
+    private GooglePay googlePay;
+
+    public AdapterGooglePay(GooglePay googlePay) {
+        this.googlePay = googlePay;
+    }
+
+    @Override
+    public void przetworzPlatnosc(double kwota, String waluta) {
+        int amountInCents = (int) (kwota * 100);
+        String country = "US";
+        googlePay.pay(amountInCents, waluta, country);
+    }
+}
+
+class SerwisPlatnosci {
+    private ProcesorPlatnosci procesor;
+
+    public SerwisPlatnosci(ProcesorPlatnosci procesor) {
+        this.procesor = procesor;
+    }
+
+    public void przetworz(double kwota, String waluta) {
+        procesor.przetworzPlatnosc(kwota, waluta);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        ProcesorPlatnosci procesorPayPal = new ProcesorPayPal();
+        ProcesorPlatnosci procesorStripe = new AdapterStripe(new Stripe());
+        ProcesorPlatnosci procesorGooglePay = new AdapterGooglePay(new GooglePay());
+
+        SerwisPlatnosci serwisPlatnosci = new SerwisPlatnosci(procesorPayPal);
+        serwisPlatnosci.przetworz(100.0, "USD");
+
+        SerwisPlatnosci serwisPlatnosciZeStripe = new SerwisPlatnosci(procesorStripe);
+        serwisPlatnosciZeStripe.przetworz(200.0, "EUR");
+
+        SerwisPlatnosci serwisPlatnosciZGooglePay = new SerwisPlatnosci(procesorGooglePay);
+        serwisPlatnosciZGooglePay.przetworz(300.0, "GBP");
+    }
+}
