@@ -1,0 +1,94 @@
+public interface Iterator {
+    boolean hasNext();
+    Employee next();
+}
+
+public interface Aggregate {
+    Iterator createIterator();
+}
+
+public class Employee {
+    private String name;
+    private int id;
+
+    public Employee(String name, int id) {
+        this.name = name;
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                '}';
+    }
+}
+
+public class EmployeeIterator implements Iterator{
+    private EmployeeList list;
+    private int index;
+
+    public EmployeeIterator(EmployeeList list) {
+        this.list = list;
+        this.index = 0;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return index < list.size();
+    }
+
+    @Override
+    public Employee next() {
+        if (hasNext()) {
+            return list.getEmployee(index++);
+        }
+        return null;
+    }
+}
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class EmployeeList implements Aggregate{
+    private List<Employee> employees = new ArrayList<>();
+    public void addEmployee(Employee employee) {
+        employees.add(employee);
+    }
+
+    public Employee getEmployee(int index) {
+        return employees.get(index);
+    }
+
+    public int size() {
+        return employees.size();
+    }
+    @Override
+    public Iterator createIterator() {
+        return new EmployeeIterator(this);
+    }
+}
+
+public class EmployeeManagement {
+    public static void main(String[] args) {
+        EmployeeList list = new EmployeeList();
+        list.addEmployee(new Employee("John Doe", 1));
+        list.addEmployee(new Employee("Jane Smith", 2));
+        list.addEmployee(new Employee("Alice Johnson", 3));
+
+        Iterator iterator = list.createIterator();
+        while (iterator.hasNext()) {
+            Employee employee = iterator.next();
+            System.out.println(employee);
+        }
+    }
+}
