@@ -1,0 +1,75 @@
+interface Command {
+    void execute();
+}
+
+class Document {
+    public void open() {
+        System.out.println("Document opened.");
+    }
+    
+    public void save() {
+        System.out.println("Document saved.");
+    }
+}
+
+class OpenCommand implements Command {
+    private Document document;
+    
+    public OpenCommand(Document document) {
+        this.document = document;
+    }
+    
+    @Override
+    public void execute() {
+        document.open();
+    }
+}
+
+class SaveCommand implements Command {
+    private Document document;
+    
+    public SaveCommand(Document document) {
+        this.document = document;
+    }
+    
+    @Override
+    public void execute() {
+        document.save();
+    }
+}
+
+class Invoker {
+    private List<Command> commands = new ArrayList<>();
+
+    public void addCommand(Command command) {
+        commands.add(command);
+    }
+
+    public void call() {
+        for (Command command : commands) {
+            command.execute();
+        }
+    }
+}
+
+public class Client {
+    public void setup(){
+        Document document = new Document();
+        OpenCommand openCommand = new OpenCommand(document);
+        SaveCommand saveCommand = new SaveCommand(document);
+
+        Invoker invoker = new Invoker();
+        invoker.addCommand(openCommand);
+        invoker.addCommand(saveCommand);
+
+        invoker.call();
+    }
+}
+
+
+public class Main {
+    public static void main(String[] args) {
+        Client client = new Client();
+        client.setup();
+    }
+}
