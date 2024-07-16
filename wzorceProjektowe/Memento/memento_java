@@ -1,0 +1,104 @@
+import java.util.ArrayDeque;
+import java.util.Deque;
+
+class Word {
+    private Integer textSize = null;
+    private String text = "";
+    private String textColor = "";
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setTextSize(Integer textSize) {
+        this.textSize = textSize;
+    }
+
+    public void setTextColor(String textColor) {
+        this.textColor = textColor;
+    }
+
+    public Memento zrobMigawke() {
+        return new Memento(text, textSize, textColor);
+    }
+
+    public void restore(Memento memento) {
+        text = memento.getText();
+        textSize = memento.getTextSize();
+        textColor = memento.getTextColor();
+    }
+
+    public static class Memento {
+        private final String text;
+        private final Integer textSize;
+        private final String textColor;
+
+        public Memento(String text, Integer textSize, String textColor) {
+            this.text = text;
+            this.textSize = textSize;
+            this.textColor = textColor;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public Integer getTextSize() {
+            return textSize;
+        }
+
+        public String getTextColor() {
+            return textColor;
+        }
+    }
+}
+
+class Edytor {
+    private Deque<Word.Memento> stateHistory = new ArrayDeque<>();
+    private Word word = new Word();
+
+    public void write(String text) {
+        word.setText(text);
+        stateHistory.add(word.zrobMigawke());
+    }
+
+    public void setTextSize(int size) {
+        word.setTextSize(size);
+        stateHistory.add(word.zrobMigawke());
+    }
+
+    public void setTextColor(String color) {
+        word.setTextColor(color);
+        stateHistory.add(word.zrobMigawke());
+    }
+
+    public void undo() {
+        if (!stateHistory.isEmpty()) {
+            stateHistory.removeLast();
+            if (!stateHistory.isEmpty()) {
+                word.restore(stateHistory.peekLast());
+            } else {
+                // Reset to default if no states left
+                word = new Word();
+            }
+        }
+    }
+
+    public String getCurrentText() {
+        return word.zrobMigawke().getText();
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Edytor editor = new Edytor();
+        editor.write("First Text");
+        System.out.println("Current Text: " + editor.getCurrentText());
+        editor.write("Second Text");
+        System.out.println("Current Text: " + editor.getCurrentText());
+        editor.undo();
+        System.out.println("After Undo: " + editor.getCurrentText());
+        editor.undo();
+        System.out.println("After Another Undo: " + editor.getCurrentText());
+    }
+}
