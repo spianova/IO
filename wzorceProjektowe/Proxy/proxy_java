@@ -1,0 +1,67 @@
+public class Video {
+    private String url;
+    private String content;
+
+    public Video(String url, String content) {
+        this.url = url;
+        this.content = content;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getContent() {
+        return content;
+    }
+}
+
+interface VideoDownloader {
+    Video downloadVideo(String url);
+}
+
+class RealVideoDownloader implements VideoDownloader {
+    @Override
+    public Video downloadVideo(String url) {
+        System.out.println("Downloading video from " + url + "...");
+        return new Video(url, "Video from URL: " + url);
+    }
+}
+
+class CachedVideoDownloaderProxy implements VideoDownloader {
+    private RealVideoDownloader realVideoDownloader;
+    private Map<String, Video> cache = new HashMap<>();
+
+    public CachedVideoDownloaderProxy(RealVideoDownloader realVideoDownloader) {
+        this.realVideoDownloader = realVideoDownloader;
+    }
+
+    @Override
+    public Video downloadVideo(String url) {
+        Video cachedVideo = cache.get(url);
+        if (cachedVideo != null) {
+            System.out.println("Video previously downloaded, returning cached video from URL: " + url);
+            return cachedVideo;
+        }
+
+        Video video = realVideoDownloader.downloadVideo(url);
+        cache.put(url, video);
+        return video;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        RealVideoDownloader realDownloader = new RealVideoDownloader();
+        CachedVideoDownloaderProxy proxyDownloader = new CachedVideoDownloaderProxy(realDownloader);
+        
+        Video video1 = proxyDownloader.downloadVideo("http://qwerty.com/video1"); // new video
+        System.out.println(video1.getContent());
+
+        Video video2 = proxyDownloader.downloadVideo("http://qwerty.com/video1"); // same video from cache
+        System.out.println(video2.getContent());
+
+        Video video3 = proxyDownloader.downloadVideo("http://example.com/video2"); // new video
+        System.out.println(video3.getContent());
+    }
+}
