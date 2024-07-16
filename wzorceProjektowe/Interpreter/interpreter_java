@@ -1,0 +1,110 @@
+public class FlowerInfo {
+    private String color;
+    private boolean available;
+
+    public FlowerInfo(String color, boolean available) {
+        this.color = color;
+        this.available = available;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+}
+
+
+import java.util.Map;
+
+public class Context {
+    private Map<String, FlowerInfo> flowers;
+
+    public Context(Map<String, FlowerInfo> flowers) {
+        this.flowers = flowers;
+    }
+
+    public FlowerInfo getFlowerInfo(String name) {
+        return flowers.get(name);
+    }
+}
+
+
+public interface Expression {
+    boolean interpret(Context context);
+}
+
+
+public class ColorExpression implements Expression{
+    private String flowerName;
+    private String color;
+
+    public ColorExpression(String flowerName, String color) {
+        this.flowerName = flowerName;
+        this.color = color;
+    }
+    @Override
+    public boolean interpret(Context context) {
+        FlowerInfo flower = context.getFlowerInfo(flowerName);
+        return flower != null && flower.getColor().equalsIgnoreCase(color);
+    }
+}
+
+
+public class AvailabilityExpression implements Expression{
+    private String flowerName;
+
+    public AvailabilityExpression(String flowerName) {
+        this.flowerName = flowerName;
+    }
+    @Override
+    public boolean interpret(Context context) {
+        FlowerInfo flower = context.getFlowerInfo(flowerName);
+        return flower != null && flower.isAvailable();
+    }
+}
+
+
+public class AndExpression implements Expression{
+
+    private Expression expr1;
+    private Expression expr2;
+
+    public AndExpression(Expression expr1, Expression expr2) {
+        this.expr1 = expr1;
+        this.expr2 = expr2;
+    }
+    @Override
+    public boolean interpret(Context context) {
+        return expr1.interpret(context) && expr2.interpret(context);
+    }
+}
+
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class Main {
+    public static void main(String[] args) {
+        Map<String, FlowerInfo> flowers = new HashMap<>();
+        flowers.put("roza", new FlowerInfo("bialy", true));
+        flowers.put("tulipan", new FlowerInfo("foiletowy", false));
+        flowers.put("magnolia", new FlowerInfo("bialy", true));
+
+        Context context = new Context(flowers);
+
+        Expression query1 = new ColorExpression("roza", "bialy");
+        Expression query2 = new AvailabilityExpression("tulipan");
+        Expression query3 = new ColorExpression("magnolia", "bialy");
+        Expression query4 = new AvailabilityExpression("magnolia");
+
+        //andExpression lacze query3 i query4
+        Expression combinedQuery = new AndExpression(query3, query4);
+
+        System.out.println("czy roza jast biala? " + query1.interpret(context));
+        System.out.println("czy tulipan jest dostepny? " + query2.interpret(context));
+        System.out.println("czy magnolia jest biala i dostepna? " + combinedQuery.interpret(context));
+    }
+}
