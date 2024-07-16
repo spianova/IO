@@ -1,0 +1,57 @@
+import java.util.ArrayList;
+import java.util.List;
+
+interface Observer {
+    void update(String news);
+}
+
+class Subscriber implements Observer {
+    private String name;
+
+    public Subscriber(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void update(String news) {
+        System.out.println(name + " received news: " + news);
+    }
+}
+
+class Newspaper {
+    private List<Observer> observers = new ArrayList<>();
+
+    public void subscribe(Observer observer) {
+        observers.add(observer);
+    }
+
+    public void unsubscribe(Observer observer) {
+        observers.remove(observer);
+    }
+
+    public void notifyObservers(String news) {
+        for (Observer observer : observers) {
+            observer.update(news);
+        }
+    }
+
+    public void releaseNewNewspaper(String news) {
+        System.out.println("Newspaper released: " + news);
+        notifyObservers(news);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Newspaper newspaper = new Newspaper();
+        Subscriber subscriber1 = new Subscriber("Jan");
+        Subscriber subscriber2 = new Subscriber("Grazyna");
+
+        newspaper.subscribe(subscriber1);
+        newspaper.subscribe(subscriber2);
+
+        newspaper.releaseNewNewspaper("wiadomosc nr 1");
+        newspaper.unsubscribe(subscriber1);
+        newspaper.releaseNewNewspaper("nowa wiadomosc nr 2");
+    }
+}
