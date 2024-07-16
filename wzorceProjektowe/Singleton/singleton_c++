@@ -1,0 +1,52 @@
+#include <iostream>
+#include <map>
+#include <string>
+
+template <typename T>
+class SingletonInstance {
+protected:
+    SingletonInstance() {}
+
+public:
+    static T& getInstance() {
+        static T instance;
+        return instance;
+    }
+
+    SingletonInstance(const SingletonInstance&) = delete;
+    SingletonInstance& operator=(const SingletonInstance&) = delete;
+};
+
+class Configuration : private SingletonInstance<Configuration> {
+public:
+    static Configuration& getInstance() {
+        return SingletonInstance<Configuration>::getInstance();
+    }
+
+    void setSetting(const std::string& key, const std::string& value) {
+        settings[key] = value;
+    }
+
+    std::string getSetting(const std::string& key) {
+        auto it = settings.find(key);
+        if (it != settings.end()) {
+            return it->second;
+        }
+        return "";
+    }
+
+private:
+    friend class SingletonInstance<Configuration>;
+    Configuration() {}
+    std::map<std::string, std::string> settings;
+};
+
+int main() {
+    Configuration::getInstance().setSetting("theme", "dark mode");
+    std::cout << "Theme: " << Configuration::getInstance().getSetting("theme") << std::endl;
+
+    bool isSame = &Configuration::getInstance() == &Configuration::getInstance();
+    std::cout << "Is single instance? " << (isSame ? "Yes" : "No") << std::endl;
+
+    return 0;
+}
