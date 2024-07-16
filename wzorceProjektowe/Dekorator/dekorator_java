@@ -1,0 +1,83 @@
+public interface Coffee {
+  double getCost();
+  String getDescription();
+}
+
+abstract public class CoffeeDecorator implements Coffee{
+  protected Coffee decoratedCoffee;
+  public CoffeeDecorator(Coffee coffee) {
+    this.decoratedCoffee = coffee;
+  }
+  public double getCost() {
+    return decoratedCoffee.getCost();
+  }
+  public String getDescription() {
+    return decoratedCoffee.getDescription();
+  }
+}
+
+public class MilkDecorator extends CoffeeDecorator{
+  public MilkDecorator(Coffee coffee) {
+    super(coffee);
+  }
+  @Override
+  public double getCost() {
+    return super.getCost() + 0.5;
+  }
+  @Override
+  public String getDescription() {
+    return super.getDescription() + ", milk";
+  }
+}
+
+public class SimpleCoffee implements Coffee{
+  @Override
+  public double getCost() {
+    return 2.0;
+  }
+  @Override
+  public String getDescription() {
+    return "Simple coffee";
+  }
+}
+
+public class SugarDecorator extends CoffeeDecorator{
+  public SugarDecorator(Coffee coffee) {
+    super(coffee);
+  }
+  @Override
+  public double getCost() {
+    return super.getCost() + 0.2;
+  }
+  @Override
+  public String getDescription() {
+    return super.getDescription() + ", sugar";
+  }
+}
+
+public class WhippedCreamDecorator extends CoffeeDecorator{
+  public WhippedCreamDecorator(Coffee coffee) {
+    super(coffee);
+  }
+  @Override
+  public double getCost() {
+    return super.getCost() + 0.7;
+  }
+  @Override
+  public String getDescription() {
+    return super.getDescription() + ", whipped cream";
+  }
+}
+
+public class Main {
+  public static void main(String[] args) {
+    Coffee simpleCoffee = new SimpleCoffee();
+    System.out.println(simpleCoffee.getDescription() + " Cost: $" + simpleCoffee.getCost());
+    Coffee milkCoffee = new MilkDecorator(new SimpleCoffee());
+    System.out.println(milkCoffee.getDescription() + " Cost: $" + milkCoffee.getCost());
+    Coffee sugarMilkCoffee = new SugarDecorator(new MilkDecorator(new SimpleCoffee()));
+    System.out.println(sugarMilkCoffee.getDescription() + " Cost: $" + sugarMilkCoffee.getCost());
+    Coffee fancyCoffee = new WhippedCreamDecorator(new SugarDecorator(new MilkDecorator(new SimpleCoffee())));
+    System.out.println(fancyCoffee.getDescription() + " Cost: $" + fancyCoffee.getCost());
+  }
+}
