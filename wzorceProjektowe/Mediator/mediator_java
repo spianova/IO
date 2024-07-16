@@ -1,0 +1,89 @@
+public interface Flower {
+    void sendMessage(String message);
+    void receiveMessage(String message);
+}
+
+
+public interface FlowerMediator {
+    void communicate(Flower flower, String message);
+    void addFlower(Flower flower);
+}
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class GardenMediator implements FlowerMediator{
+    private List<Flower> flowers = new ArrayList<>();
+
+    @Override
+    public void communicate(Flower sender, String message) {
+        for(Flower flower : flowers){
+            if(!flower.equals(sender)){
+                flower.receiveMessage(message);
+            }
+        }
+    }
+
+    @Override
+    public void addFlower(Flower flower) {
+        flowers.add(flower);
+    }
+}
+
+
+public class Rose implements Flower{
+    private FlowerMediator mediator;
+
+    public Rose(FlowerMediator mediator) {
+        this.mediator = mediator;
+    }
+
+    @Override
+    public void sendMessage(String message) {
+        mediator.communicate(this, message);
+    }
+
+    @Override
+    public void receiveMessage(String message) {
+        System.out.println("rose received: " + message);
+    }
+}
+
+
+public class Tulip implements Flower{
+    private FlowerMediator mediator;
+
+    public Tulip(FlowerMediator mediator) {
+        this.mediator = mediator;
+    }
+
+    @Override
+    public void sendMessage(String message) {
+        mediator.communicate(this, message);
+    }
+
+    @Override
+    public void receiveMessage(String message) {
+        System.out.println("tulip received: " + message);
+    }
+}
+
+
+public class Daisy implements Flower{
+    private FlowerMediator mediator;
+
+    public Daisy(FlowerMediator mediator) {
+        this.mediator = mediator;
+    }
+
+    @Override
+    public void sendMessage(String message) {
+        mediator.communicate(this, message);
+    }
+
+    @Override
+    public void receiveMessage(String message) {
+        System.out.println("daisy received: " + message);
+    }
+}
