@@ -1,0 +1,57 @@
+interface FlowerDisplay {
+    void display();
+}
+
+class ImageDisplay implements FlowerDisplay {
+    public void display() {
+        System.out.println("Displaying the flower as an image.");
+    }
+}
+
+class TextDisplay implements FlowerDisplay {
+    public void display() {
+        System.out.println("Displaying the flower in text format.");
+    }
+}
+
+abstract class Flower {
+    protected FlowerDisplay displayImpl;
+
+    public Flower(FlowerDisplay displayImpl) {
+        this.displayImpl = displayImpl;
+    }
+
+    abstract void display();
+}
+
+class Rose extends Flower {
+    public Rose(FlowerDisplay displayImpl) {
+        super(displayImpl);
+    }
+
+    void display() {
+        System.out.print("Rose is being ");
+        displayImpl.display();
+    }
+}
+
+class Tulip extends Flower {
+    public Tulip(FlowerDisplay displayImpl) {
+        super(displayImpl);
+    }
+
+    void display() {
+        System.out.print("Tulip is being ");
+        displayImpl.display();
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Flower rose = new Rose(new ImageDisplay());
+        Flower tulip = new Tulip(new TextDisplay());
+
+        rose.display();
+        tulip.display();
+    }
+}
