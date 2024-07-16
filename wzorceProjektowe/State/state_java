@@ -1,0 +1,79 @@
+public class Player {
+    private String name;
+    private WeaponState state;
+
+    public Player(String name) {
+        this.name = name;
+        this.state = new Sword(); // Default weapon state is Sword
+    }
+
+    public void setState(WeaponState state) {
+        this.state = state;
+    }
+
+    public void attack() {
+        state.attack(this);
+    }
+
+    public void block() {
+        state.block(this);
+    }
+}
+
+interface WeaponState {
+    void attack(Player player);
+    void block(Player player);
+}
+
+class Sword implements WeaponState {
+    @Override
+    public void attack(Player player) {
+        System.out.println("attacking with Sword");
+    }
+
+    @Override
+    public void block(Player player) {
+        System.out.println("blocking with Sword");
+    }
+}
+
+class Axe implements WeaponState {
+    @Override
+    public void attack(Player player) {
+        System.out.println("attacking with Axe");
+    }
+
+    @Override
+    public void block(Player player) {
+        System.out.println("blocking with Axe");
+    }
+}
+
+class Javelin implements WeaponState {
+    @Override
+    public void attack(Player player) {
+        System.out.println("attacking with Javelin");
+    }
+
+    @Override
+    public void block(Player player) {
+        System.out.println("blocking with Javelin");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Player player1 = new Player("Bob");
+
+        player1.attack(); // Initial attack with Sword
+
+        player1.setState(new Javelin()); // Change to Javelin
+        player1.block();
+
+        player1.setState(new Axe()); // Change to Axe
+        player1.attack();
+
+        player1.setState(new Javelin()); // Change back to Javelin
+        player1.block();
+    }
+}
