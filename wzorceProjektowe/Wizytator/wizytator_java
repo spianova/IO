@@ -1,0 +1,79 @@
+public interface Flower {
+    void accept(FlowerVisitor visitor);
+}
+
+
+public interface FlowerVisitor {
+    void visitRose(Rose rose);
+    void visitTulip(Tulip tulip);
+}
+
+
+public class Rose implements Flower{
+    @Override
+    public void accept(FlowerVisitor visitor) {
+        visitor.visitRose(this);
+    }
+    public void display(){
+        System.out.println("displaying a beautiful rose");
+    }
+}
+
+
+public class Tulip implements Flower{
+    @Override
+    public void accept(FlowerVisitor visitor) {
+        visitor.visitTulip(this);
+    }
+    public void display(){
+        System.out.println("displaying a colorful tulip");
+    }
+}
+
+
+public class CaretakingVisitor implements FlowerVisitor{
+    @Override
+    public void visitRose(Rose rose) {
+        System.out.println("caring for a rose");
+        rose.display();
+    }
+
+    @Override
+    public void visitTulip(Tulip tulip) {
+        System.out.println("caring for a tulip");
+        tulip.display();
+    }
+}
+
+
+public class PhotographyVisitor implements FlowerVisitor{
+    @Override
+    public void visitRose(Rose rose) {
+        System.out.println("taking a photo of a rose");
+        rose.display();
+    }
+
+    @Override
+    public void visitTulip(Tulip tulip) {
+        System.out.println("taking a photo of a tulip");
+        tulip.display();
+    }
+}
+
+
+public class Main {
+    public static void main(String[] args) {
+        Flower rose = new Rose();
+        Flower tulip = new Tulip();
+
+        FlowerVisitor photographyVisitor = new PhotographyVisitor();
+        FlowerVisitor caretakingVisitor = new CaretakingVisitor();
+
+        rose.accept(photographyVisitor);
+        tulip.accept(photographyVisitor);
+
+        rose.accept(caretakingVisitor);
+        tulip.accept(caretakingVisitor);
+    }
+}
+
