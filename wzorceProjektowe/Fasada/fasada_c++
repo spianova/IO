@@ -1,0 +1,58 @@
+#include <iostream>
+
+class TemperatureController {
+public:
+  void setTemperature(int temperature) {
+    std::cout << "Setting temperature to " << temperature << " degrees." << std::endl;
+  }
+};
+
+class SpinController {
+public:
+  void setSpinSpeed(int speed) {
+    std::cout << "Setting spin speed to " << speed << " RPM." << std::endl;
+  }
+};
+
+class WaterController {
+public:
+  void fillWater() {
+    std::cout << "Filling water into the drum." << std::endl;
+  }
+};
+
+class ProgramController {
+public:
+  void startProgram() {
+    std::cout << "Starting the wash program." << std::endl;
+  }
+  void stopProgram() {
+    std::cout << "Stopping the wash program." << std::endl;
+  }
+};
+
+class WashingMachineFacade {
+private:
+  TemperatureController tempController;
+  SpinController spinController;
+  WaterController waterController;
+  ProgramController programController;
+public:
+  void startWashProgram(int temperature, int spinSpeed) {
+    waterController.fillWater();
+    tempController.setTemperature(temperature);
+    spinController.setSpinSpeed(spinSpeed);
+    programController.startProgram();
+  }
+  void stopWashProgram() {
+    programController.stopProgram();
+  }
+};
+
+int main() {
+  WashingMachineFacade washingMachine;
+  washingMachine.startWashProgram(40, 1200);
+  std::cout << "Washing in progress..." << std::endl;
+  washingMachine.stopWashProgram();
+return 0;
+}
