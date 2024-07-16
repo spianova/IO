@@ -1,0 +1,64 @@
+public interface VehiclePrototype {
+    Vehicle clone();
+}
+
+public abstract class Vehicle implements VehiclePrototype{
+    protected String make;
+    protected String model;
+    protected String color;
+
+    public Vehicle(String make, String model, String color) {
+        this.make = make;
+        this.model = model;
+        this.color = color;
+    }
+    public abstract Vehicle clone();
+
+    @Override
+    public String toString() {
+        return "Vehicle{" +
+                "make='" + make + '\'' +
+                ", model='" + model + '\'' +
+                ", color='" + color + '\'' +
+                '}';
+    }
+}
+
+public class Truck extends Vehicle{
+    private int loadCapacity;
+    public Truck(String make, String model, String color, int loadCapacity) {
+        super(make, model, color);
+        this.loadCapacity = loadCapacity;
+    }
+
+    @Override
+    public Vehicle clone() {
+        return new Truck(this.make, this.model, this.color, this.loadCapacity);
+    }
+}
+
+public class Car extends Vehicle{
+    public Car(String make, String model, String color) {
+        super(make, model, color);
+    }
+
+    @Override
+    public Vehicle clone() {
+        return new Car(this.make, this.model, this.color);
+    }
+}
+
+public class Client {
+    public static void main(String[] args) {
+        Car car = new Car("Tesla", "Model S", "Red");
+        Car clonedCar = (Car) car.clone();
+
+        Truck truck = new Truck("Volvo", "FH16", "Blue", 10000);
+        Truck clonedTruck = (Truck) truck.clone();
+
+        System.out.println(car);
+        System.out.println(clonedCar);
+        System.out.println(truck);
+        System.out.println(clonedTruck);
+    }
+}
