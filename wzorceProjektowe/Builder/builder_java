@@ -1,0 +1,78 @@
+public class FlowerBouquet {
+    private int roses;
+    private int lilies;
+    private int daisies;
+    private boolean hasGreenery;
+
+    public FlowerBouquet(int roses, int lilies, int daisies, boolean hasGreenery) {
+        this.roses = roses;
+        this.lilies = lilies;
+        this.daisies = daisies;
+        this.hasGreenery = hasGreenery;
+    }
+    @Override
+    public String toString() {
+        return "FlowerBouquet{" +
+                "roses=" + roses +
+                ", lilies=" + lilies +
+                ", daisies=" + daisies +
+                ", hasGreenery=" + hasGreenery +
+                '}';
+    }
+}
+
+public interface FlowerBouquetBuilder {
+    FlowerBouquetBuilder addRoses(int count);
+    FlowerBouquetBuilder addLilies(int count);
+    FlowerBouquetBuilder addDaisies(int count);
+    FlowerBouquetBuilder addGreenery();
+    FlowerBouquet build();
+}
+
+public class SimpleFlowerBouquetBuilder implements FlowerBouquetBuilder{
+
+    private int roses = 0;
+    private int lilies = 0;
+    private int daisies = 0;
+    private boolean hasGreenery = false;
+    @Override
+    public FlowerBouquetBuilder addRoses(int count) {
+        roses += count;
+        return this;
+    }
+
+    @Override
+    public FlowerBouquetBuilder addLilies(int count) {
+        lilies += count;
+        return this;
+    }
+
+    @Override
+    public FlowerBouquetBuilder addDaisies(int count) {
+        daisies += count;
+        return this;
+    }
+
+    @Override
+    public FlowerBouquetBuilder addGreenery() {
+        hasGreenery = true;
+        return this;
+    }
+
+    @Override
+    public FlowerBouquet build(){
+        return new FlowerBouquet(roses, lilies, daisies, hasGreenery);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        FlowerBouquetBuilder builder = new SimpleFlowerBouquetBuilder();
+        FlowerBouquet bouquet = builder.addRoses(12)
+                .addLilies(5)
+                .addDaisies(8)
+                .addGreenery()
+                .build();
+        System.out.println(bouquet);
+    }
+}
